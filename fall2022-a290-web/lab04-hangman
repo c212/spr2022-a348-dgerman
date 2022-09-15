@@ -4,6 +4,18 @@ use DBI;
 use Digest::MD5 qw(md5_hex); 
 use CGI; 
 
+# create table hangman (
+#   session_id   char(8) primary key,       
+#   WORD         char(30),        
+#   GUESSED      char(26),       
+#   GAMENO       int,        
+#   WON          int,       
+#   GUESSES_LEFT int,        
+#   TOTAL        int,        
+#   modified     timestamp
+# );
+# then please adjust below accordingly 
+
 $WORDS     = '/usr/share/dict/words'; 
 $TRIES     = 6; 
 $EXPIRE    = 60 * 60 * 24 * 30;     # allow 30 days before expiration 
