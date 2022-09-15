@@ -1,0 +1,51 @@
+#!/usr/bin/python3
+
+import cgi, random, MySQLdb, sys, os
+
+(message, session_id, balance, action, id) = ("", "", "", "", "")
+
+print("Content-type: text/html\n\n")
+
+q = cgi.FieldStorage()
+
+# if q.has_key("action"): action = q["action"].value
+
+if "action" in q: action = q["action"].value
+
+Con = MySQLdb.Connect(host="silo.luddy.indiana.edu", port=50000, user="one", passwd="two", db="three") # <---
+
+Cursor = Con.cursor()
+
+# if q.has_key("session_id") and action != "Reset":
+
+if "session_id" in q and action != "Reset":
+  id = q["session_id"].value
+  Cursor.execute( "SELECT message, balance FROM four WHERE session_id = '%s'" % q["session_id"].value )
+  Results = Cursor.fetchall()
+  (message, balance) = Results[0]
+  balance = str(int(balance) + 1)
+  message = " You have clicked me %s times. " % balance
+  Cursor.execute( "update four set message = '%s', balance = '%s' where session_id = '%s'" % (message, balance, q["session_id"].value) )
+  # Con.commit()
+else:
+  balance = 0
+  message = "Welcome."
+  for i in range(8): id += str(random.randrange(10))
+  # print(balance, message, id) # <------
+  # print("And now I should insert %s in the table." % id) 
+  query = "insert into four (session_id, balance, message) values ('%s', %s, '%s');" % (id, balance, message)
+  # print(query)
+  if not Cursor.execute( query ): # "insert into four (session_id, balance, message) values ('%s', '%s', '%s')" % (id, balance, message) ):
+    print("Content-type: text/html\n\nError. Please reload.")
+    sys.exit()
+  else:
+    pass # print("This should have gone through.")
+
+Con.commit()
+
+print("""
+  <form>
+    %s <input type=submit name=action value=Proceed> <input type=submit name=action value=Reset>
+    <input type=hidden name=session_id value=%s>
+  </form>
+""" % (message, id))
