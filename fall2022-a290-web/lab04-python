@@ -12,7 +12,18 @@ q = cgi.FieldStorage()
 
 if "action" in q: action = q["action"].value
 
-Con = MySQLdb.Connect(host="silo.luddy.indiana.edu", port=50000, user="one", passwd="two", db="three") # <---
+# create database lab4;  
+# create user 'gru'@'silo.luddy.indiana.edu' identified by 'miNi0n5';
+# grant all on lab4.* to 'gru'@'silo.luddy.indiana.edu';
+# create table four (
+#   session_id char(8) primary key,       
+#   message    varchar(380),        
+#   balance    int,        
+#   modified   timestamp
+# );    
+# see below (we kept the name of the table)
+  
+Con = MySQLdb.Connect(host="silo.luddy.indiana.edu", port=50000, user="one", passwd="two", db="three") # <--- adjust accordingly
 
 Cursor = Con.cursor()
 
